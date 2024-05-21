@@ -1,6 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="my" tagdir="/WEB-INF/tags"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,32 +10,38 @@
 </head>
 <body>
 	<div class="container-lg">
-	<h1>${board.id}게시물 수정</h1>
-	<form method="post">
-		<input type="hidden" name="id" value="${board.id}"/> 
-		<div>
-			제목 : <input type="text" name="title" value="${board.title}"/>
+	
+		<div class="justi fy-content-center">
+			<div class="col-12 col-md-8 col-lg-6">
+
+
+				<h1>${board.id}번 게시물 수정</h1>
+				<form method="post">
+					<input type="hidden" name="id" value="${board.id}" />
+					<div class="mb-3">
+						<label for="titleInput" class="form-label">제목</label> 
+						<input id="titleInput" type="text" class="form-control" value="${board.title}" name="title" />
+					</div>
+					<div class="mb-3">
+						<label for="bodyInput" class="form-label">본문</label>
+						<textarea class="form-control" id="bodyTextarea" rows="10" name="body">${board.body}</textarea>
+					</div>
+					<div class="mb-3">
+						<label for="writerInput" class="form-label">작성자</label> 
+						<input class="form-control" id="writerInput" type="text" name="writer" value="${board.writer}" />
+					</div>
+					<div class="mb-3">
+						<label for="insertedInput" class="form-label">날짜</label>
+						<input class="form-control" id="insertedInput" type="text" value="${board.inserted}" readonly />
+					</div>
+					<div class="mb-3">
+						<input class="btn btn-secondary" type="submit" value="수정" />
+					</div>
+				</form>
+			</div>
 		</div>
-		<div>
-			본문 : <textarea name="body">${board.body}</textarea>
-		</div>
-		<div>
-			작성자 : <input type="text" name="writer" value="${board.writer}"/>
-		</div>
-		<div>
-			날짜 : <input type="text" value="${board.inserted}" readonly/>
-		</div>
-		<div>
-			<input type="submit" value="수정" />
-		</div>
-	</form>
 	</div>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-	
-	<c:if test="${not empty param.fail}">
-		<script>
-			alert("수정되지 않았습니다");
-		</script>
-	</c:if> 
+
 </body>
 </html>

@@ -20,7 +20,6 @@ public class BoardService {
 	}
 
 	public Board getBoard(Integer id) {
-		// TODO Auto-generated method stub
 		return mapper.selectById(id); 
 	}
 
@@ -35,5 +34,20 @@ public class BoardService {
 	public boolean remove(Integer id) {
 		int cnt = mapper.deleteById(id);
 		return cnt == 1;
+	}
+
+	
+	public boolean addBoard(Board board) {
+		int cnt = mapper.insert(board); 
+				
+		return cnt == 1;
+	}
+
+	
+	public List<Board> listBoard(Integer page) {
+		Integer startIndex = (page - 1) * 10;
+		// 게시물 목록 
+		return mapper.selectAllPaging(startIndex);
+		// 페이지네이션이 필요한 정보 
 	}
 }

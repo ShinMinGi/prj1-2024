@@ -3,7 +3,9 @@ package me.springbootstudy.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -41,6 +43,7 @@ public interface BoardMapper {
 			""")
 	int update(Board board);
 	
+	// 게시글 삭제 
 	@Delete("""
 			DELETE FROM Board 
 			WHERE id = #{id}
@@ -48,4 +51,25 @@ public interface BoardMapper {
 	int deleteById(Integer id);
 
 	
+	// 글 등록 
+	@Insert("""
+			INSERT INTO Board (title, body, writer) 
+			VALUE (#{title}, #{body}, #{writer})
+			""")
+	@Options(useGeneratedKeys = true, keyProperty = "id")
+	int insert(Board board);
+
+	@Select("""
+			SELECT 
+				id,
+				title, 
+				writer, 
+				inserted
+			FROM Board 
+			ORDER BY id DESC 
+			LIMIT #{startIndex}, 10 
+			""")
+	
+	List<Board> selectAllPaging(Integer startIndex);
 }
+

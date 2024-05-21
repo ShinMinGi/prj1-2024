@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import me.springbootstudy.domain.Board;
@@ -23,15 +24,16 @@ public class BoardController {
 
 	@Autowired
 	private BoardService service; 
-	// 경로 : http://localhost:8080
-	// 경로 : http://localhost:8080/list
+	// 경로 : http://localhost:8080?page=?
+	// 경로 : http://localhost:8080/list?page=?
 	// 게시물 목록 
 //	@RequestMapping(value = {"/", "list"}, method = RequestMethod.GET)
 	@GetMapping({"/", "list"})
-	public String list(Model model) {
+	public String list(Model model, @RequestParam(value="page", defaultValue="1") Integer page) {
 		// 1. request param 수집/가공 
 		// 2. business logic 처리 
-		List<Board> list = service.listBoard();
+//		List<Board> list = service.listBoard();	 //페이지 처리 전 
+		List<Board> list = service.listBoard(page); // 페이지 처리 
 		// 3. add attribute 
 		model.addAttribute("boardList", list); 
 		
@@ -66,11 +68,12 @@ public class BoardController {
 		
 		if(ok) {
 			// 해당 게시물 보기로 리디렉션
-			rttr.addAttribute("success", "success");
+//			rttr.addAttribute("success", "success");
+			rttr.addFlashAttribute("message", board.getId()  + "번 게시물이 수정되었습니다.");
 			return "redirect:/id/" + board.getId();
 		} else { 
 			// 수정 form 으로 리디렉션
-			rttr.addAttribute("fail", "fail");
+			rttr.addFlashAttribute("message", board.getId() + "번 게시물 수정을 실패하였습니다.");
 			return "redirect:/abc/" + board.getId();
 		} 
 	}
@@ -79,11 +82,44 @@ public class BoardController {
 	public String remove(Integer id, RedirectAttributes rttr) {
 		boolean ok = service.remove(id); 
 		if(ok) {
-			rttr.addAttribute("success", "remove");
+			// query string에 추가 
+			// rttr.addAttribute("success", "remove");
+			
+			// 모델에 추가 
+			rttr.addFlashAttribute("message", id + "번 게시물이 삭제되었습니다.");
 			return "redirect:/list";
 		} else {
 			return "redirect:/id/" + id; 
 		}
 	}
 	
+	@GetMapping("add")
+	public void addForm(Board board) {
+		// 게시물 작성 form (view) 로 포워드 
+	}
+
+	// String return 타입이라 public String 
+	@PostMapping("add")
+	public String addProcess(Board board, RedirectAttributes rttr) {
+		
+		boolean ok = service.addBoard(board);
+		
+		if(ok) {
+			rttr.addFlashAttribute("message", board.getId() + "번 게시글을 작성했습니다.");
+			return "redirect:/id/" + board.getId();
+		} else {
+			rttr.addFlashAttribute("board", board);
+			return "redirect:/add";
+		}
+	}
+	
+//	// 페이징 처리 
+//	@GetMapping("list")
+//	pub
+//		Integer startIndex = (page - 1) * 20;
+//	}
+//	
+//	
 }
+
+
